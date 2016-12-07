@@ -9,6 +9,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import de.czyrux.store.R;
@@ -18,9 +20,15 @@ import de.czyrux.store.core.domain.cart.CartProductFactory;
 import de.czyrux.store.core.domain.cart.CartService;
 import de.czyrux.store.core.domain.cart.CartStore;
 import de.czyrux.store.inject.Injector;
+import de.czyrux.store.tracking.TrackingDispatcher;
+import de.czyrux.store.tracking.TrackingEvent;
 import de.czyrux.store.ui.base.BaseFragment;
 import de.czyrux.store.ui.util.PriceFormatter;
 import de.czyrux.store.util.RxUtil;
+
+import static de.czyrux.store.tracking.TrackingDispatcher.KEY_ACTION;
+import static de.czyrux.store.tracking.TrackingDispatcher.KEY_CATEGORY;
+import static de.czyrux.store.tracking.TrackingDispatcher.KEY_LABEL;
 
 public class CartFragment extends BaseFragment implements CartListener {
 
@@ -41,6 +49,7 @@ public class CartFragment extends BaseFragment implements CartListener {
 
     private CartService cartService;
     private CartStore cartStore;
+    private TrackingDispatcher tracking;
 
     public static CartFragment newInstance() {
         CartFragment fragment = new CartFragment();
@@ -62,6 +71,7 @@ public class CartFragment extends BaseFragment implements CartListener {
         super.onCreate(savedInstanceState);
         cartService = Injector.cartService();
         cartStore = Injector.cartStore();
+        tracking = Injector.tracking();
     }
 
     @Override
@@ -128,10 +138,21 @@ public class CartFragment extends BaseFragment implements CartListener {
         addSubscritiption(cartService.removeProduct(CartProductFactory.newCartProduct(product, 1))
                 .compose(RxUtil.applyStandardSchedulers())
                 .subscribe(RxUtil.emptyObserver()));
+        TrackingEvent trackingEvent = new TrackingEvent()
+                .put(KEY_ACTION, getString(R.string.tracking_act_interaction))
+                .put(KEY_CATEGORY, getString(R.string.tracking_cat_to_cart_remove))
+                .put(KEY_LABEL, product.sku);
+        tracking.sendEvent(trackingEvent);
     }
 
     @OnClick(R.id.cart_checkout_button)
     void onCheckoutClicked() {
         Toast.makeText(getContext(), "Checkout", Toast.LENGTH_SHORT).show();
+        TrackingEvent trackingEvent = new TrackingEvent()
+                .put(KEY_ACTION, getString(R.string.tracking_act_interaction))
+                .put(KEY_CATEGORY, getString(R.string.tracking_cat_checkout));
+        tracking.sendEvent(trackingEvent);
+        // Demo : force GA to send tracking data immediately
+        GoogleAnalytics.getInstance(getActivity()).dispatchLocalHits();
     }
 }

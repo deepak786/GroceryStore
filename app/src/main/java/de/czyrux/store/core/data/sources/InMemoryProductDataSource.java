@@ -1,5 +1,7 @@
 package de.czyrux.store.core.data.sources;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import java.util.List;
 
 import de.czyrux.store.core.data.util.TimeDelayer;
@@ -20,6 +22,8 @@ public class InMemoryProductDataSource implements ProductDataSource {
         return Observable.defer(() -> {
             timeDelayer.delay();
             List<Product> products = ProductProviderScaffolding.getProductList();
+            // Firebase crash report example:
+            // FirebaseCrash.report(new Exception("Products endpoint not implemented, using "+ InMemoryProductDataSource.class.getName()));
             return Observable.just(products);
         });
     }

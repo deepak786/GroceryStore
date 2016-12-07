@@ -16,4 +16,22 @@
     <string name="cart_checkout_total">Total:</string>
     <string name="cart_item_quantity">Quantity: %1$d</string>
 
+    <!-- Menu -->
+    <string name="menu_about">About</string>
+
+    <!-- About -->
+    <string name="screen_title_about">About</string>
+    <string name="about_main_text">Some nice text about this app</string>
+
+    <!-- Tracking values -->
+
+    <string name="tracking_act_interaction">Content interaction</string>
+    <string name="tracking_cat_checkout">Checkout</string>
+    <string name="tracking_cat_to_cart_add">Add to cart</string>
+    <string name="tracking_cat_to_cart_remove">Remove from cart</string>
+
+    <!-- GA CONFIG -->
+    <string name="ga_anonymizeIp">false</string>
+
+
 </resources>

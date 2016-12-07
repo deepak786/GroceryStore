@@ -18,8 +18,13 @@ import de.czyrux.store.core.domain.product.Product;
 import de.czyrux.store.core.domain.product.ProductResponse;
 import de.czyrux.store.core.domain.product.ProductService;
 import de.czyrux.store.inject.Injector;
+import de.czyrux.store.tracking.TrackingDispatcher;
+import de.czyrux.store.tracking.TrackingEvent;
 import de.czyrux.store.ui.base.BaseFragment;
 import de.czyrux.store.util.RxUtil;
+
+import static de.czyrux.store.tracking.TrackingDispatcher.*;
+import static de.czyrux.store.tracking.TrackingDispatcher.KEY_ACTION;
 
 public class CatalogFragment extends BaseFragment implements CatalogListener {
 
@@ -37,6 +42,8 @@ public class CatalogFragment extends BaseFragment implements CatalogListener {
     private ProductService productService;
 
     private CartService cartService;
+
+    private TrackingDispatcher tracking;
 
     public static CatalogFragment newInstance() {
         CatalogFragment fragment = new CatalogFragment();
@@ -58,6 +65,7 @@ public class CatalogFragment extends BaseFragment implements CatalogListener {
         super.onCreate(savedInstanceState);
         productService = Injector.productService();
         cartService = Injector.cartService();
+        tracking = Injector.tracking();
     }
 
     @Override
@@ -112,7 +120,14 @@ public class CatalogFragment extends BaseFragment implements CatalogListener {
         CartProduct cartProduct = CartProductFactory.newCartProduct(product, 1);
         addSubscritiption(cartService.addProduct(cartProduct)
                 .compose(RxUtil.applyStandardSchedulers())
-                .subscribe(RxUtil.emptyObserver()));
+                .subscribe(RxUtil.emptyObserver())
+        );
+
+        TrackingEvent trackingEvent = new TrackingEvent()
+                .put(KEY_ACTION, getString(R.string.tracking_act_interaction))
+                .put(KEY_CATEGORY, getString(R.string.tracking_cat_to_cart_add))
+                .put(KEY_LABEL, product.sku);
+        tracking.sendEvent(trackingEvent);
 
         Toast.makeText(getContext(), "Adding to cart..." + product.title, Toast.LENGTH_SHORT).show();
     }

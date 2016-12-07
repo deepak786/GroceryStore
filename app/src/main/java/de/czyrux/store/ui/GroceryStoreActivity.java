@@ -1,5 +1,6 @@
 package de.czyrux.store.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -59,7 +60,22 @@ public class GroceryStoreActivity extends BaseActivity {
         SectionsPagerAdapter tabsSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.grocery_store_viewpager);
         viewPager.setAdapter(tabsSectionsPagerAdapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // empty
+            }
 
+            @Override
+            public void onPageSelected(int position) {
+                trackScreenName();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                // empty
+            }
+        });
         tabLayout = (TabLayout) findViewById(R.id.grocery_store_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -67,14 +83,39 @@ public class GroceryStoreActivity extends BaseActivity {
         tabLayout.getTabAt(CATALOG_TAB_POSITION).setText("Catalog");
     }
 
-    private void setupDependencies() {
+    @Override
+    protected void setupDependencies() {
+        super.setupDependencies();
         cartStore = Injector.cartStore();
+    }
+
+
+    @Override
+    protected String getScreenName() {
+        return getCurrentTitle();
+    }
+
+    /**
+     * Return the title of the currently displayed section.
+     *
+     * @return title of the section
+     */
+    private String getCurrentTitle() {
+        int position = viewPager.getCurrentItem();
+        switch (position) {
+            case 0:
+                return "ProductList";
+            case 1:
+                return "Cart";
+            default:
+                return "Undefined";
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        addSubscritiption(cartStore.observe()
+        addSubscription(cartStore.observe()
                 .subscribeOn(Schedulers.computation())
                 .map(cart -> {
                     int cartProductsCount = 0;
@@ -87,6 +128,7 @@ public class GroceryStoreActivity extends BaseActivity {
                 .subscribe(this::updateCartTabTitle));
     }
 
+
     @SuppressWarnings("ConstantConditions")
     private void updateCartTabTitle(int count) {
         tabLayout.getTabAt(CART_TAB_POSITION).setText("Cart (" + count + ")");
@@ -98,9 +140,17 @@ public class GroceryStoreActivity extends BaseActivity {
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.about:
+                Intent intent = new Intent(this, AboutActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private static class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -124,5 +174,7 @@ public class GroceryStoreActivity extends BaseActivity {
         public int getCount() {
             return TABS_COUNT;
         }
+
+
     }
 }
