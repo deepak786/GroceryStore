@@ -16,17 +16,38 @@ The app is a simulation of an e-commerce application with two main screens: a ca
 3. From the Cart the products can be removed by clicking on them.
 4. There would be a count indicator in one of the tabs (the cart one) with the number of items included in the Shopping Cart.
 5. When something is added/removed from Cart the counter and content of the cart screen must be updated accordingly.
+6. "About" screen can be opened by menu item click.
+7. The following interaction events are sent to the analytics: add to cart, remove from cart, checkout.
+8. The following screen view events are sent to the analytics: product list, cart, about.
 
 
 ## Concepts
+#### Application Tracking
+Shows how you can use Flurry, Google Analytics and Firebase Analytics. With Tracking Facade you can easily add more tracking SDKs.
 
-* [Store](/app/src/main/java/de/czyrux/store/core/domain/Store.java) as a backbone for sharing state across the application.
+**Full article**: [The key concepts of app tracking for developers](https://medium.com/@sergii/the-key-concepts-of-app-tracking-for-developers-a11bebf1e65e#.dq17d0p77)
+
+Tracking facade design:
+
+![Tracking facade design](/doc/tracking_facade.png)
+
+#### Sharing state across the application
+
+[Store](/app/src/main/java/de/czyrux/store/core/domain/Store.java) as a backbone for sharing state across the application.
 
 **Full article**: [State propagation in Android with RxJava Subjects](https://medium.com/@czyrux/state-propagation-in-android-with-rxjava-subjects-81db49a0dd8e#.ylft5ryj5)
 
 Flow updates for add2Cart operation:
 
 ![add2Cart Flow](/doc/add2Cart_flow.png)
+
+## Additional setup
+
+**Tracking demo:** you will need to setup Google Analytics, Firebase and Flurry accounts to be able to see tracking output.
+* Google Analytics
+* Firebase Analytics
+* Flurry
+* To see the data being sent by tracking tools you should setup a proxy tool (e.g. Charles or mitmproxy) and add the proper SSL certificate on your test deices
 
 
 
