@@ -13,8 +13,8 @@ import java.util.Map;
 
 public class TrackingDispatcher {
 
-    // please setup using your Flurry account
-    public final static String FLURRY_APIKEY =  "HIDDEN";
+    // please set this constant from your Flurry account:
+    public final static String FLURRY_APIKEY =  "";
 
     public final static String KEY_CATEGORY = "category";
     public final static String KEY_ACTION = "action";

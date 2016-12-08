@@ -22,16 +22,17 @@ The app is a simulation of an e-commerce application with two main screens: a ca
 
 
 ## Concepts
-#### Application Tracking
-Shows how you can use Flurry, Google Analytics and Firebase Analytics. With Tracking Facade you can easily add more tracking SDKs.
+
+### Application tracking
+Shows how you can integrate Flurry, Google Analytics and Firebase Analytics. With Tracking Facade you can easily add more tracking SDKs.
 
 **Full article**: [The key concepts of app tracking for developers](https://medium.com/@sergii/the-key-concepts-of-app-tracking-for-developers-a11bebf1e65e#.dq17d0p77)
 
-Tracking facade design:
+Tracking Facade design:
 
 ![Tracking facade design](/doc/tracking_facade.png)
 
-#### Sharing state across the application
+### Sharing state across the application
 
 [Store](/app/src/main/java/de/czyrux/store/core/domain/Store.java) as a backbone for sharing state across the application.
 
@@ -43,11 +44,11 @@ Flow updates for add2Cart operation:
 
 ## Additional setup
 
-**Tracking demo:** you will need to setup Google Analytics, Firebase and Flurry accounts to be able to see tracking output.
-* Google Analytics
-* Firebase Analytics
-* Flurry
-* To see the data being sent by tracking tools you should setup a proxy tool (e.g. Charles or mitmproxy) and add the proper SSL certificate on your test deices
+**Tracking demo**: you will need to setup Google Analytics, Firebase and Flurry accounts to be able to see tracking output.
+
+* Google Analytics and Firebase Analytics: [Follow instructions](https://developers.google.com/mobile/add) to get your google-services.json configuration file and add it to the project.
+* Flurry: [follow instructions](https://developer.yahoo.com/flurry/docs/analytics/gettingstarted/android/) to get your key and set it in [TrackingDispatcher](/app/src/main/java/de/czyrux/store/tracking/TrackingDispatcher.java).
+* To see the data being sent by tracking tools you need to setup a proxy tool (e.g. [Charles](https://www.charlesproxy.com/) or [mitmproxy](https://mitmproxy.org/)) and add the corresponding SSL certificate on your test device.
 
 
 
