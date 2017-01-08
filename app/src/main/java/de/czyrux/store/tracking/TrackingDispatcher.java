@@ -2,6 +2,7 @@ package de.czyrux.store.tracking;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -14,7 +15,7 @@ import java.util.Map;
 public class TrackingDispatcher {
 
     // please set this constant from your Flurry account:
-    public final static String FLURRY_APIKEY =  "";
+    public final static String FLURRY_APIKEY = "";
 
     public final static String KEY_CATEGORY = "category";
     public final static String KEY_ACTION = "action";
@@ -24,11 +25,17 @@ public class TrackingDispatcher {
 
     private List<TrackingHandler> trackingHandlers;
 
-    public TrackingDispatcher(Tracker tracker, FirebaseAnalytics firebaseAnalytics) {
+    public TrackingDispatcher(@Nullable Tracker gaTracker, @Nullable FirebaseAnalytics firebaseAnalytics) {
         this.trackingHandlers = new ArrayList<>();
-        trackingHandlers.add(new FATrackingHandler(firebaseAnalytics));
-        trackingHandlers.add(new GATrackingHandler(tracker));
-        trackingHandlers.add(new FlurryTrackingHandler());
+        if (firebaseAnalytics != null) {
+            trackingHandlers.add(new FATrackingHandler(firebaseAnalytics));
+        }
+        if (gaTracker != null) {
+            trackingHandlers.add(new GATrackingHandler(gaTracker));
+        }
+        if (!TextUtils.isEmpty(FLURRY_APIKEY)) {
+            trackingHandlers.add(new FlurryTrackingHandler());
+        }
     }
 
     public void sendEvent(@NonNull TrackingEvent trackingEvent) {

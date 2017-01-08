@@ -50,19 +50,20 @@ public class DefaultDependenciesFactory implements DependenciesFactory {
     public TrackingDispatcher createTracking(Context context) {
         synchronized (this) {
 
-            // Init GA
-            Tracker tracker = GoogleAnalytics.getInstance(context)
-                    .newTracker(R.xml.global_tracker);
+            // Init GA - uncomment after GA setup
+//            Tracker tracker = GoogleAnalytics.getInstance(context)
+//                    .newTracker(R.xml.global_tracker);
+
             // Init FA
             FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
 
-            // Init Flurry
-            FlurryAgent.setLogEnabled(true);
-            FlurryAgent.setLogLevel(Log.VERBOSE);
-            FlurryAgent.setVersionName("1.0");
-            FlurryAgent.init(context, TrackingDispatcher.FLURRY_APIKEY);
+            // Init Flurry - uncomment after proper setup
+//            FlurryAgent.setLogEnabled(true);
+//            FlurryAgent.setLogLevel(Log.VERBOSE);
+//            FlurryAgent.setVersionName("1.0");
+//            FlurryAgent.init(context, TrackingDispatcher.FLURRY_APIKEY);
 
-            return new TrackingDispatcher(tracker, firebaseAnalytics);
+            return new TrackingDispatcher(null, firebaseAnalytics);
         }
     }
 }
