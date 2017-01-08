@@ -10,8 +10,8 @@ import java.util.Map;
 class FATrackingHandler implements TrackingHandler {
 
     private final static String KEY_SCREEN_VIEW_NAME = "CUSTOM_PARAM_SCREEN_NAME";
-    private final static String PARAM_SCREEN_VIEW = "SCREEN_VIEW";
-    private final static String PARAM_EVENT_NAME = "SOME_EVENT_ID";
+    private final static String PARAM_SCREEN_VIEW = "CUSTOM_SCREENVIEW";
+    private final static String PARAM_EVENT_NAME = "CUSTOM_EVENT_ID";
 
     private FirebaseAnalytics firebaseAnalytics;
 
