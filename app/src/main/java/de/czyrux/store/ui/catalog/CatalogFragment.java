@@ -34,8 +34,6 @@ public class CatalogFragment extends BaseFragment implements CatalogListener {
 
     private static final String TAG = CatalogFragment.class.getName();
 
-    private static final int GRID_COLUMNS = 1;
-
     @BindView(R.id.catalog_emptyView)
     View emptyView;
 
@@ -53,7 +51,7 @@ public class CatalogFragment extends BaseFragment implements CatalogListener {
 
     private ThrottleTrackingBus trackingBus;
 
-    private GridLayoutManager gridLayoutManager;
+    private LinearLayoutManager lenearLayoutManager;
 
     public static CatalogFragment newInstance() {
         CatalogFragment fragment = new CatalogFragment();
@@ -81,13 +79,13 @@ public class CatalogFragment extends BaseFragment implements CatalogListener {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        gridLayoutManager = new GridLayoutManager(view.getContext(), GRID_COLUMNS, LinearLayoutManager.VERTICAL, false);
+        lenearLayoutManager = new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setLayoutManager(lenearLayoutManager);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                final VisibleState visibleStateFinal = new VisibleState(gridLayoutManager.findFirstCompletelyVisibleItemPosition(), gridLayoutManager.findLastCompletelyVisibleItemPosition());
+                final VisibleState visibleStateFinal = new VisibleState(lenearLayoutManager.findFirstCompletelyVisibleItemPosition(), lenearLayoutManager.findLastCompletelyVisibleItemPosition());
                 trackingBus.postViewEvent(visibleStateFinal);
             }
         });
