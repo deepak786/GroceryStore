@@ -139,7 +139,7 @@ public class CartFragment extends BaseFragment implements CartListener {
                 .compose(RxUtil.applyStandardSchedulers())
                 .subscribe(RxUtil.emptyObserver()));
         TrackingEvent trackingEvent = new TrackingEvent()
-                .put(KEY_ACTION, getString(R.string.tracking_act_interaction))
+                .put(KEY_ACTION, getString(R.string.tracking_cat_interaction))
                 .put(KEY_CATEGORY, getString(R.string.tracking_cat_to_cart_remove))
                 .put(KEY_LABEL, product.sku);
         tracking.sendEvent(trackingEvent);
@@ -149,7 +149,7 @@ public class CartFragment extends BaseFragment implements CartListener {
     void onCheckoutClicked() {
         Toast.makeText(getContext(), "Checkout", Toast.LENGTH_SHORT).show();
         TrackingEvent trackingEvent = new TrackingEvent()
-                .put(KEY_ACTION, getString(R.string.tracking_act_interaction))
+                .put(KEY_ACTION, getString(R.string.tracking_cat_interaction))
                 .put(KEY_CATEGORY, getString(R.string.tracking_cat_checkout));
         tracking.sendEvent(trackingEvent);
         // Demo : force GA to send tracking data immediately

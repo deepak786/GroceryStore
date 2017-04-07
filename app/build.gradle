@@ -1,15 +1,16 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'android-apt'
+apply plugin: 'com.jakewharton.hugo'
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion 25
     buildToolsVersion '25.0.2'
 
     defaultConfig {
         applicationId "de.czyrux.store"
         minSdkVersion 15
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         // to store google analytics/firebase configuration
@@ -42,8 +43,8 @@ android {
 
 dependencies {
 
-    final SUPPORT_LIBRARY_VERSION = '24.2.1'
-    final PLAY_SERVICES_VERSION = '10.0.1'
+    final SUPPORT_LIBRARY_VERSION = '25.3.1'
+    final PLAY_SERVICES_VERSION = '10.2.1'
     final MOCKITO_VERSION = '1.10.19'
     final JUNIT_VERSION = '4.12'
 

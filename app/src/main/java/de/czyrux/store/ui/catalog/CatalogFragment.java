@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -18,15 +19,20 @@ import de.czyrux.store.core.domain.product.Product;
 import de.czyrux.store.core.domain.product.ProductResponse;
 import de.czyrux.store.core.domain.product.ProductService;
 import de.czyrux.store.inject.Injector;
+import de.czyrux.store.tracking.ThrottleTrackingBus;
+import de.czyrux.store.tracking.ThrottleTrackingBus.VisibleState;
 import de.czyrux.store.tracking.TrackingDispatcher;
 import de.czyrux.store.tracking.TrackingEvent;
 import de.czyrux.store.ui.base.BaseFragment;
 import de.czyrux.store.util.RxUtil;
 
-import static de.czyrux.store.tracking.TrackingDispatcher.*;
 import static de.czyrux.store.tracking.TrackingDispatcher.KEY_ACTION;
+import static de.czyrux.store.tracking.TrackingDispatcher.KEY_CATEGORY;
+import static de.czyrux.store.tracking.TrackingDispatcher.KEY_LABEL;
 
 public class CatalogFragment extends BaseFragment implements CatalogListener {
+
+    private static final String TAG = CatalogFragment.class.getName();
 
     private static final int GRID_COLUMNS = 1;
 
@@ -44,6 +50,10 @@ public class CatalogFragment extends BaseFragment implements CatalogListener {
     private CartService cartService;
 
     private TrackingDispatcher tracking;
+
+    private ThrottleTrackingBus trackingBus;
+
+    private GridLayoutManager gridLayoutManager;
 
     public static CatalogFragment newInstance() {
         CatalogFragment fragment = new CatalogFragment();
@@ -71,18 +81,47 @@ public class CatalogFragment extends BaseFragment implements CatalogListener {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        gridLayoutManager = new GridLayoutManager(view.getContext(), GRID_COLUMNS, LinearLayoutManager.VERTICAL, false);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), GRID_COLUMNS, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                final VisibleState visibleStateFinal = new VisibleState(gridLayoutManager.findFirstCompletelyVisibleItemPosition(), gridLayoutManager.findLastCompletelyVisibleItemPosition());
+                trackingBus.postViewEvent(visibleStateFinal);
+            }
+        });
+
+    }
+
+    void onTrackViewResponse(VisibleState visibleState) {
+        Log.d(TAG, "Received to be tracked: " + visibleState.toString());
+        TrackingEvent trackingEvent = new TrackingEvent()
+                .put(KEY_ACTION, getString(R.string.tracking_view_catalog_items))
+                .put(KEY_CATEGORY, getString(R.string.tracking_cat_interaction))
+                .put(KEY_LABEL, visibleState.toString());
+        tracking.sendEvent(trackingEvent);
     }
 
     @Override
     public void onStart() {
         super.onStart();
         showProgressBar();
-
         addSubscritiption(productService.getAllCatalog()
                 .compose(RxUtil.applyStandardSchedulers())
                 .subscribe(this::onProductResponse, RxUtil.logError()));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        trackingBus = new ThrottleTrackingBus(this::onTrackViewResponse, RxUtil.logError());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        trackingBus.unsubscribe();
     }
 
     private void showProgressBar() {
@@ -124,7 +163,7 @@ public class CatalogFragment extends BaseFragment implements CatalogListener {
         );
 
         TrackingEvent trackingEvent = new TrackingEvent()
-                .put(KEY_ACTION, getString(R.string.tracking_act_interaction))
+                .put(KEY_ACTION, getString(R.string.tracking_cat_interaction))
                 .put(KEY_CATEGORY, getString(R.string.tracking_cat_to_cart_add))
                 .put(KEY_LABEL, product.sku);
         tracking.sendEvent(trackingEvent);

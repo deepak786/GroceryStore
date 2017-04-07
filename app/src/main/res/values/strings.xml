@@ -25,7 +25,8 @@
 
     <!-- Tracking values -->
 
-    <string name="tracking_act_interaction">Content interaction</string>
+    <string name="tracking_cat_interaction">Content interaction</string>
+    <string name="tracking_view_catalog_items">View catalog items</string>
     <string name="tracking_cat_checkout">Checkout</string>
     <string name="tracking_cat_to_cart_add">Add to cart</string>
     <string name="tracking_cat_to_cart_remove">Remove from cart</string>
