@@ -8,8 +8,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import de.czyrux.store.R;
@@ -19,6 +21,7 @@ import de.czyrux.store.inject.Injector;
 import de.czyrux.store.ui.base.BaseActivity;
 import de.czyrux.store.ui.cart.CartFragment;
 import de.czyrux.store.ui.catalog.CatalogFragment;
+import de.czyrux.store.ui.util.MyAppLogReader;
 import de.czyrux.store.ui.util.PlaceholderFragment;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -38,6 +41,9 @@ public class GroceryStoreActivity extends BaseActivity {
     @BindView(R.id.grocery_store_tabs)
     TabLayout tabLayout;
 
+    @BindView(R.id.text_debuglogs)
+    TextView textLogs;
+
     private CartStore cartStore;
 
     @Override
@@ -45,6 +51,33 @@ public class GroceryStoreActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setupViews();
         setupDependencies();
+        postRunnable();
+    }
+
+    Runnable fetchLogs = () -> {
+        addMessage(MyAppLogReader.getLog().toString());
+        postRunnable();
+    };
+
+    private void postRunnable(){
+        textLogs.postDelayed(fetchLogs, 1000);
+    }
+
+
+    private void addMessage(String msg) {
+        if (TextUtils.isEmpty(msg)){
+            return;
+        }
+        textLogs.append(msg + "\n");
+        // find the amount we need to scroll.  This works by
+        // asking the TextView's internal layout for the position
+        // of the final line and then subtracting the TextView's height
+        final int scrollAmount = textLogs.getLayout().getLineTop(textLogs.getLineCount()) - textLogs.getHeight();
+        // if there is no need to scroll, scrollAmount will be <=0
+        if (scrollAmount > 0)
+            textLogs.scrollTo(0, scrollAmount);
+        else
+            textLogs.scrollTo(0, 0);
     }
 
     @Override
