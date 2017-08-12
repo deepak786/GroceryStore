@@ -24,7 +24,7 @@
     <string name="about_main_text">Some nice text about this app</string>
 
     <!-- Tracking values -->
-
+    <string name="screen_title_logger">Analytics logger</string>
     <string name="tracking_cat_interaction">Content interaction</string>
     <string name="tracking_view_catalog_items">View catalog items</string>
     <string name="tracking_cat_checkout">Checkout</string>

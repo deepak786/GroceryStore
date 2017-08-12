@@ -30,6 +30,12 @@
             android:label="@string/screen_title_about"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".ui.AnalyticsLoggerActivity"
+            android:label="@string/screen_title_logger"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
 
         <!-- Optionally, register AnalyticsReceiver and AnalyticsService to support background
      dispatching on non-Google Play devices -->
