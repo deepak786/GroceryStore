@@ -32,6 +32,15 @@ Tracking Facade design:
 
 ![Tracking facade design](/doc/tracking_facade.png)
 
+
+### Detecting List Items Observed by User
+App tracking solution for the following task: identify which item of the RecyclerView list was viewed and perceived by the user. Perceived in this context means that user held the item in the viewport for at least 250 milliseconds. The image below illustrates this with an example.
+
+**Full article**: [Detecting List Items Observed by User](https://proandroiddev.com/detecting-list-items-perceived-by-user-8f164dfb1d05)
+
+![Item was perveived by the user](https://cdn-images-1.medium.com/max/800/1*8NBOvk6uzETTUC0PJasfzQ.png)
+
+
 ### Sharing state across the application
 
 [Store](/app/src/main/java/de/czyrux/store/core/domain/Store.java) as a backbone for sharing state across the application.
